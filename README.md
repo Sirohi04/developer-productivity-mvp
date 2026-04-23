@@ -83,10 +83,10 @@ AI tools were used only for:
 4. Open `http://localhost:3000`
 
 ## Live Demo
-PASTE_YOUR_VERCEL_LINK_HERE
+https://developer-productivity-mvp-seven.vercel.app/
 
 ## GitHub Repository
-PASTE_YOUR_GITHUB_LINK_HERE
+https://github.com/Sirohi04/developer-productivity-mvp
 
 ## Improvements With More Time
 If given more time, I would:
