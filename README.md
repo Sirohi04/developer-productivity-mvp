@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Developer Productivity MVP
 
-## Getting Started
+## Overview
+This project is a focused full-stack MVP designed to help an Individual Contributor (developer) understand productivity metrics and take meaningful action.
 
-First, run the development server:
+Instead of just displaying raw metrics, this application converts developer metrics into:
+- clear interpretation
+- actionable insights
+- practical next steps
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Problem Statement
+Developer productivity metrics such as Lead Time, Cycle Time, Bug Rate, Deployment Frequency, and PR Throughput are often difficult to interpret.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Raw metrics alone do not answer:
+- why performance is low or high
+- what actions should be taken next
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Solution
+This MVP bridges the gap by converting raw metrics into:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Metrics → Insight → Action
 
-## Learn More
+It provides:
+- a clean dashboard for metrics
+- a likely story behind the numbers
+- practical recommendations for improvement
 
-To learn more about Next.js, take a look at the following resources:
+## Tech Stack
+- Next.js (App Router)
+- React Functional Components
+- Tailwind CSS
+- Next.js API Routes
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Metrics Used
+- Lead Time for Changes
+- Cycle Time
+- Bug Rate
+- Deployment Frequency
+- PR Throughput
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Features
+### 1. Developer Dashboard
+Displays all key productivity metrics in a card-based UI.
 
-## Deploy on Vercel
+### 2. Health Score
+A calculated score out of 100 representing overall developer performance.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 3. Insight Generation
+The system interprets metrics and generates a likely story explaining what might be happening.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 4. Actionable Recommendations
+Provides practical next steps based on detected issues.
+
+### 5. Mock API Integration
+Metrics are fetched via a Next.js API route (`/api/metrics`).
+
+## Approach Taken
+The application is built around a single focused user journey:
+
+Developer → Sees Metrics → Understands Problem → Gets Suggestions → Takes Action
+
+Instead of building a large unfinished dashboard, the focus was on clarity, simplicity, and actionable output.
+
+## API Integration
+A mock API route was created using Next.js at:
+
+`/api/metrics`
+
+This returns developer data including all required metrics and simulates backend behavior.
+
+## AI Usage
+I built the project independently from scratch, including the component structure, UI design, logic implementation, and deployment.
+
+AI tools were used only for:
+- debugging issues
+- refining UI and code structure
+- validating implementation ideas
+
+## Setup Instructions
+1. Clone the repository
+2. Run `npm install`
+3. Run `npm run dev`
+4. Open `http://localhost:3000`
+
+## Live Demo
+PASTE_YOUR_VERCEL_LINK_HERE
+
+## GitHub Repository
+PASTE_YOUR_GITHUB_LINK_HERE
+
+## Improvements With More Time
+If given more time, I would:
+- add trend charts
+- create a manager summary page
+- store data in a real database
+- improve animations and micro-interactions
+- improve accessibility and SEO
+
+## Limitations
+- uses mock data instead of real-time workbook ingestion
+- simplified health score logic
+- no historical trend tracking
+
+## Conclusion
+This MVP demonstrates how developer productivity data can be transformed into meaningful insights and actionable recommendations.
+
+The focus was on building a clear, usable, and explainable product rather than a broad unfinished dashboard.
+
+## Author
+Akshat Sirohi
