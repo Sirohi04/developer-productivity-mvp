@@ -4,7 +4,11 @@ import InsightBox from "./components/InsightBox";
 import ActionList from "./components/ActionList";
 
 async function getMetrics() {
-  const res = await fetch("http://localhost:3000/api/metrics", {
+  const baseUrl = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "http://localhost:3000";
+
+  const res = await fetch(`${baseUrl}/api/metrics`, {
     cache: "no-store",
   });
 
