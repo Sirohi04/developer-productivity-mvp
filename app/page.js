@@ -1,10 +1,19 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import MetricCard from "./components/MetricCard";
 import InsightBox from "./components/InsightBox";
 import ActionList from "./components/ActionList";
+
+const data = {
+  developer: "Akshat Sirohi",
+  month: "April 2026",
+  metrics: {
+    leadTime: 4.5,
+    cycleTime: 3.2,
+    bugRate: 0.18,
+    deploymentFrequency: 3,
+    prThroughput: 11,
+  },
+};
 
 function interpretMetrics(metrics) {
   let story = "";
@@ -31,12 +40,8 @@ function interpretMetrics(metrics) {
     actions.push("Ship smaller changes more frequently to create a healthier release rhythm.");
   }
 
-  if (!story) {
-    story =
-      "The overall metrics look healthy. Delivery and quality seem balanced.";
-    tone = "green";
-    actions.push("Maintain a steady release rhythm and continue using small PRs.");
-    actions.push("Track monthly trends regularly.");
+  if (actions.length < 2) {
+    actions.push("Review the workflow and identify the biggest source of delay this month.");
   }
 
   return { story, tone, actions };
@@ -55,30 +60,6 @@ function getHealthScore(metrics) {
 }
 
 export default function Home() {
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    async function loadMetrics() {
-      try {
-        const res = await fetch("/api/metrics");
-        const json = await res.json();
-        setData(json);
-      } catch (error) {
-        console.error("Failed to load metrics:", error);
-      }
-    }
-
-    loadMetrics();
-  }, []);
-
-  if (!data) {
-    return (
-      <main className="min-h-screen bg-slate-100 p-10 text-center">
-        <p className="text-lg font-semibold text-slate-700">Loading dashboard...</p>
-      </main>
-    );
-  }
-
   const { developer, month, metrics } = data;
   const { story, tone, actions } = interpretMetrics(metrics);
   const healthScore = getHealthScore(metrics);
@@ -142,53 +123,15 @@ export default function Home() {
         </div>
 
         <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-5">
-          <MetricCard
-            title="Lead Time"
-            value={metrics.leadTime}
-            unit="days"
-            accent="blue"
-            description="Average time from PR opened to successful production deployment."
-          />
-
-          <MetricCard
-            title="Cycle Time"
-            value={metrics.cycleTime}
-            unit="days"
-            accent="purple"
-            description="Average time from issue moved to In Progress to Done."
-          />
-
-          <MetricCard
-            title="Bug Rate"
-            value={metrics.bugRate.toFixed(2)}
-            accent="red"
-            description="Escaped production bugs divided by issues completed in the month."
-          />
-
-          <MetricCard
-            title="Deployment Frequency"
-            value={metrics.deploymentFrequency}
-            unit="/month"
-            accent="green"
-            description="Count of successful production deployments in the month."
-          />
-
-          <MetricCard
-            title="PR Throughput"
-            value={metrics.prThroughput}
-            unit="PRs"
-            accent="amber"
-            description="Count of merged pull requests in the month."
-          />
+          <MetricCard title="Lead Time" value={metrics.leadTime} unit="days" accent="blue" description="Average time from PR opened to successful production deployment." />
+          <MetricCard title="Cycle Time" value={metrics.cycleTime} unit="days" accent="purple" description="Average time from issue moved to In Progress to Done." />
+          <MetricCard title="Bug Rate" value={metrics.bugRate.toFixed(2)} accent="red" description="Escaped production bugs divided by issues completed in the month." />
+          <MetricCard title="Deployment Frequency" value={metrics.deploymentFrequency} unit="/month" accent="green" description="Count of successful production deployments in the month." />
+          <MetricCard title="PR Throughput" value={metrics.prThroughput} unit="PRs" accent="amber" description="Count of merged pull requests in the month." />
         </div>
 
         <div className="mt-8 grid gap-6 lg:grid-cols-2">
-          <InsightBox
-            title="Likely Story Behind the Metrics"
-            text={story}
-            tone={tone}
-          />
-
+          <InsightBox title="Likely Story Behind the Metrics" text={story} tone={tone} />
           <ActionList actions={actions} />
         </div>
 
@@ -197,11 +140,9 @@ export default function Home() {
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-600">
               Product Thinking
             </p>
-
             <h3 className="mt-2 text-2xl font-bold text-slate-900">
               Why this MVP matters
             </h3>
-
             <p className="mt-4 text-sm leading-7 text-slate-600">
               Raw metrics alone do not tell a developer what is actually happening or what
               action to take. This MVP connects raw numbers to interpretation and a practical
@@ -213,11 +154,7 @@ export default function Home() {
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-100">
               Recommended Journey
             </p>
-
-            <h3 className="mt-2 text-2xl font-bold">
-              Metrics → Meaning → Action
-            </h3>
-
+            <h3 className="mt-2 text-2xl font-bold">Metrics → Meaning → Action</h3>
             <p className="mt-4 text-sm leading-7 text-blue-100">
               This is the focused journey for an Individual Contributor view.
             </p>
