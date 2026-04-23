@@ -1,23 +1,10 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import MetricCard from "./components/MetricCard";
 import InsightBox from "./components/InsightBox";
 import ActionList from "./components/ActionList";
-
-async function getMetrics() {
-  const baseUrl = process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : "http://localhost:3000";
-
-  const res = await fetch(`${baseUrl}/api/metrics`, {
-    cache: "no-store",
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch metrics");
-  }
-
-  return res.json();
-}
 
 function interpretMetrics(metrics) {
   let story = "";
@@ -46,14 +33,10 @@ function interpretMetrics(metrics) {
 
   if (!story) {
     story =
-      "The overall metrics look healthy. Delivery and quality seem balanced, with no major bottleneck visible from this simplified monthly snapshot.";
+      "The overall metrics look healthy. Delivery and quality seem balanced.";
     tone = "green";
     actions.push("Maintain a steady release rhythm and continue using small PRs.");
-    actions.push("Review monthly trends regularly to catch issues before they grow.");
-  }
-
-  if (actions.length < 2) {
-    actions.push("Review the workflow and identify the single biggest source of delay this month.");
+    actions.push("Track monthly trends regularly.");
   }
 
   return { story, tone, actions };
@@ -68,15 +51,32 @@ function getHealthScore(metrics) {
   if (metrics.deploymentFrequency < 4) score -= 10;
   if (metrics.prThroughput < 10) score -= 10;
 
-  if (score < 0) score = 0;
-  return score;
+  return Math.max(score, 0);
 }
 
-export default async function Home() {
-  const data = await getMetrics();
+export default function Home() {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    async function loadMetrics() {
+      try {
+        const res = await fetch("/api/metrics");
+        const json = await res.json();
+        setData(json);
+      } catch (error) {
+        console.error("Failed to load metrics:", error);
+      }
+    }
+
+    loadMetrics();
+  }, []);
 
   if (!data) {
-    return <div className="p-10 text-center">Loading...</div>;
+    return (
+      <main className="min-h-screen bg-slate-100 p-10 text-center">
+        <p className="text-lg font-semibold text-slate-700">Loading dashboard...</p>
+      </main>
+    );
   }
 
   const { developer, month, metrics } = data;
@@ -98,8 +98,8 @@ export default async function Home() {
 
             <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-300">
               This dashboard converts raw productivity metrics into a likely story and
-              practical next steps, helping a developer understand not just what is
-              happening, but what to do next.
+              practical next steps, helping a developer understand what is happening and
+              what to do next.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-4">
@@ -109,7 +109,9 @@ export default async function Home() {
               </div>
 
               <div className="rounded-2xl bg-white/10 px-5 py-4 backdrop-blur">
-                <p className="text-xs uppercase tracking-wide text-slate-300">Current Focus</p>
+                <p className="text-xs uppercase tracking-wide text-slate-300">
+                  Current Focus
+                </p>
                 <p className="mt-1 text-lg font-semibold">Delivery Health</p>
               </div>
             </div>
@@ -119,7 +121,11 @@ export default async function Home() {
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-600">
               Overall Score
             </p>
-            <h3 className="mt-3 text-5xl font-bold text-slate-900">{healthScore}</h3>
+
+            <h3 className="mt-3 text-5xl font-bold text-slate-900">
+              {healthScore}
+            </h3>
+
             <p className="mt-2 text-sm text-slate-500">Out of 100</p>
 
             <div className="mt-6 h-3 overflow-hidden rounded-full bg-slate-200">
@@ -143,6 +149,7 @@ export default async function Home() {
             accent="blue"
             description="Average time from PR opened to successful production deployment."
           />
+
           <MetricCard
             title="Cycle Time"
             value={metrics.cycleTime}
@@ -150,12 +157,14 @@ export default async function Home() {
             accent="purple"
             description="Average time from issue moved to In Progress to Done."
           />
+
           <MetricCard
             title="Bug Rate"
             value={metrics.bugRate.toFixed(2)}
             accent="red"
             description="Escaped production bugs divided by issues completed in the month."
           />
+
           <MetricCard
             title="Deployment Frequency"
             value={metrics.deploymentFrequency}
@@ -163,6 +172,7 @@ export default async function Home() {
             accent="green"
             description="Count of successful production deployments in the month."
           />
+
           <MetricCard
             title="PR Throughput"
             value={metrics.prThroughput}
@@ -187,13 +197,15 @@ export default async function Home() {
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-600">
               Product Thinking
             </p>
+
             <h3 className="mt-2 text-2xl font-bold text-slate-900">
               Why this MVP matters
             </h3>
+
             <p className="mt-4 text-sm leading-7 text-slate-600">
               Raw metrics alone do not tell a developer what is actually happening or what
               action to take. This MVP connects raw numbers to interpretation and a practical
-              next-step plan, which makes the dashboard more useful than a generic metric board.
+              next-step plan.
             </p>
           </div>
 
@@ -201,9 +213,13 @@ export default async function Home() {
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-100">
               Recommended Journey
             </p>
-            <h3 className="mt-2 text-2xl font-bold">Metrics → Meaning → Action</h3>
+
+            <h3 className="mt-2 text-2xl font-bold">
+              Metrics → Meaning → Action
+            </h3>
+
             <p className="mt-4 text-sm leading-7 text-blue-100">
-              This is the single focused journey the assignment recommends for an IC view.
+              This is the focused journey for an Individual Contributor view.
             </p>
           </div>
         </div>
